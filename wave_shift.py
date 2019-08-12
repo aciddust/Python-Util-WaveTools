@@ -9,9 +9,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-sample_rate = 192000 # sample rate
+sample_rate = int(sys.argv[2]) # sample rate
 defined_size = sample_rate * 60 # 1 minute
-offset_size = int(sys.argv[2]) % defined_size # x % 60 seconds
+offset_size = int(sys.argv[3]) % defined_size # x % 60 seconds
 file_list = list()
 name_split = list()
 time_info = None
@@ -63,6 +63,7 @@ while len(file_list) > 0: # loop until empty list
     print('file dir:', file_dir)
     print('file_name', file_name)
     data, rate = librosa.load(wav, sr=sample_rate) # open wav file
+    
     ''' 
     # if you wanna resampling, try here.
     data, rate = sf.read(wav, dtype='float16')
@@ -91,7 +92,7 @@ while len(file_list) > 0: # loop until empty list
                  name_split[0] + '_' +
                  name_split[1] + '_' +
                  name_split[2] + '_' +
-                 str(time_info).replace('-','').replace(':','').replace(' ','_') + '.wav',
+                 str(time_info)[2:].replace('-','').replace(':','').replace(' ','_') + '.wav',
                  data_buf[:defined_size], sample_rate, subtype='PCM_16')
         time_info = time_info + timedelta(minutes=1)
         data_buf = data_buf[defined_size:] # remove previous data
@@ -106,7 +107,7 @@ if len(data_buf) > 0:
                  name_split[0] + '_' +
                  name_split[1] + '_' +
                  name_split[2] + '_' +
-                 str(time_info).replace('-','').replace(':','').replace(' ','_') + '.wav',
+                 str(time_info)[2:].replace('-','').replace(':','').replace(' ','_') + '.wav',
                  data_buf[:defined_size], sample_rate, subtype='PCM_16')
 
 print('[Notice] Done')
